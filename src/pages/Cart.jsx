@@ -19,19 +19,22 @@ export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartRedux = useSelector((state) => state.carts.items);
+  const { data } = useSelector((state) => state.products.listProduct);
+  const currentProducts = data?.data?.listProduct.filter((product) =>
+    cartRedux.some((item) => item._id === product._id)
+  );
+  const productsWithRemainingQuantity = currentProducts?.map((product) => ({
+    ...product,
+    remainingQuantity:
+      product.quantity -
+      (cartRedux.find((item) => item._id === product._id)?.quantity || 0),
+  }));
+  //
   const totalPrice = cartRedux.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  const totalQuantityOrder = cartRedux.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
-  const { data } = useSelector((state) => state.products.listProduct);
-  const totalQuantity = data?.data?.listProduct?.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+
   const handleAddCart = (product) => {
     dispatch(addCart(product));
     toast.success("Đã thêm 1 sản phẩm");
@@ -125,7 +128,8 @@ export default function Cart() {
                   variant="h5"
                   sx={{ fontWeight: "bold", fontSize: 24 }}
                 >
-                  Còn lại: {totalQuantity - totalQuantityOrder}
+                  Còn lại:{" "}
+                  {productsWithRemainingQuantity?.[index].remainingQuantity}
                 </Typography>
               </CardContent>
 
