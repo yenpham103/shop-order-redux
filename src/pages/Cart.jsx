@@ -13,10 +13,25 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import { addCart, clearCart } from "../redux/slices/cartSlice";
 import { removeCart, deleteCart } from "../redux/slices/cartSlice";
 import { ToastContainer, toast } from "react-toastify";
+import Header from "../components/Header";
 
 export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartRedux = useSelector((state) => state.carts.items);
+  const totalPrice = cartRedux.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+  const totalQuantityOrder = cartRedux.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+  const { data } = useSelector((state) => state.products.listProduct);
+  const totalQuantity = data?.data?.listProduct?.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
   const handleAddCart = (product) => {
     dispatch(addCart(product));
     toast.success("Đã thêm 1 sản phẩm");
@@ -35,11 +50,6 @@ export default function Cart() {
     }
   };
 
-  const cartRedux = useSelector((state) => state.carts.items);
-  const totalPrice = cartRedux.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
   const handleCheckOut = () => {
     localStorage.clear();
     dispatch(clearCart());
@@ -51,6 +61,7 @@ export default function Cart() {
 
   return (
     <>
+      <Header />
       <Box
         sx={{
           width: "100%",
@@ -110,6 +121,12 @@ export default function Cart() {
                     VND
                   </Typography>
                 </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", fontSize: 24 }}
+                >
+                  Còn lại: {totalQuantity - totalQuantityOrder}
+                </Typography>
               </CardContent>
 
               <CardActions>
@@ -139,25 +156,50 @@ export default function Cart() {
                       +
                     </Button>
                   </Box>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "red",
-                      fontSize: 24,
-                    }}
-                    onClick={() => handleDeleteAllCart(product._id)}
-                    startIcon={
-                      <DeleteOutlineOutlinedIcon
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Typography
+                      variant="h6"
+                      color="black"
+                      sx={{
+                        fontWeight: "bold",
+                        fontSize: 24,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                      }}
+                    >
+                      {formatVnd(product.price * product.quantity)}
+                      <Typography
+                        variant="body2"
                         sx={{
+                          fontWeight: "bold",
                           fontSize: 24,
-                          ml: 1,
+                          color: "#c0392b",
                         }}
-                      />
-                    }
-                  />
+                      >
+                        VND
+                      </Typography>
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "red",
+                        fontSize: 24,
+                      }}
+                      onClick={() => handleDeleteAllCart(product._id)}
+                      startIcon={
+                        <DeleteOutlineOutlinedIcon
+                          sx={{
+                            fontSize: 24,
+                            ml: 1,
+                          }}
+                        />
+                      }
+                    />
+                  </Box>
                 </Box>
               </CardActions>
             </Card>

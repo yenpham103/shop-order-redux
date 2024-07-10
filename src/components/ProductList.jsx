@@ -7,11 +7,10 @@ import Loading from "../components/Loading";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import PaginationPage from "./Pagination";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export default function ProductList() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const currentPage = Number(searchParams.get("page") || 1);
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.products.listProduct);
@@ -22,9 +21,8 @@ export default function ProductList() {
   const handleChangePage = useCallback(
     (page) => {
       setSearchParams({ page });
-      navigate(`/product/?page=${page}`, { replace: true });
     },
-    [navigate, setSearchParams]
+    [setSearchParams]
   );
 
   if (status === "failed") {
