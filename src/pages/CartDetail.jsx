@@ -111,7 +111,7 @@ export default function CartDetail() {
                 </CardActions>
               </Card>
             </Box>
-            <ToastContainer />
+            <ToastContainer position="bottom-right" />
           </>
         )
       )}
