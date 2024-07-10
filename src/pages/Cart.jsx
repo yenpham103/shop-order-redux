@@ -27,7 +27,7 @@ export default function Cart() {
     ...product,
     remainingQuantity:
       product.quantity -
-      (cartRedux.find((item) => item._id === product._id)?.quantity || 0),
+      (cartRedux?.find((item) => item._id === product._id).quantity || 0),
   }));
   //
   const totalPrice = cartRedux.reduce(
@@ -128,7 +128,7 @@ export default function Cart() {
                   variant="h5"
                   sx={{ fontWeight: "bold", fontSize: 24 }}
                 >
-                  Còn lại:{" "}
+                  Còn lại:
                   {productsWithRemainingQuantity?.[index].remainingQuantity}
                 </Typography>
               </CardContent>
