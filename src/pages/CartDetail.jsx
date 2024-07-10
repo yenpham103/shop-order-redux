@@ -14,6 +14,7 @@ import { getProduct } from "../redux/middlewares/productMiddleware";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { addCart } from "../redux/slices/cartSlice";
+import { ToastContainer, toast } from "react-toastify";
 export default function CartDetail() {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ export default function CartDetail() {
   }, [dispatch, id]);
   const handleAddCart = () => {
     dispatch(addCart(data?.data));
+    toast.success("Đã thêm 1 sản phẩm");
   };
 
   return (
@@ -109,6 +111,7 @@ export default function CartDetail() {
                 </CardActions>
               </Card>
             </Box>
+            <ToastContainer />
           </>
         )
       )}
